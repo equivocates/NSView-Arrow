@@ -16,6 +16,10 @@ class Arrow:NSView {
     let tailWidth = CGFloat(10)
     let headWidth = CGFloat(30)
     
+    var length:CGFloat {
+        return CGFloat(hypotf(Float(end.x - start.x), Float(end.y - start.y)))
+    }
+    
     init(frame:NSRect, starting:NSPoint, ending:NSPoint) {
         self.start = starting
         self.end = ending
@@ -28,7 +32,8 @@ class Arrow:NSView {
     }
     
     override func draw(_ rect: CGRect) {
-       
+        
+        guard let superview = self.superview else { return }
         
         let path = NSBezierPath()
         let color = NSColor.red
@@ -36,32 +41,28 @@ class Arrow:NSView {
         color.set()
         path.lineWidth = lineWidth
         
-        self.start = self.convert(start, from: self.superview!)
-        self.end = self.convert(end, from: self.superview!)
+        self.start = self.convert(start, from: superview)
+        self.end = self.convert(end, from: superview)
 
-        let length = CGFloat(hypotf(Float(end.x - start.x), Float(end.y - start.y)))
-        
-        let points = arrowPoints(length: length, tailWidth: tailWidth, headWidth: headWidth, headLength: headLength)
+        let points = self.arrowPoints
         path.move(to: points.first!)
         for point in points.dropFirst() {
             path.line(to: point)
         }
         
-        let transform = self.transform(length)
-        path.transform(using: transform)
+        path.transform(using: self.transform)
         path.fill()
         path.stroke()
         path.close()
     }
-    private func transform(_ length:CGFloat) -> AffineTransform {
+    
+    private var transform:AffineTransform {
         let cosine = (end.x - start.x) / length
         let sine = (end.y - start.y) / length
         return AffineTransform(m11: cosine, m12: sine, m21: -sine, m22: cosine, tX: start.x, tY: start.y)
     }
-    private func arrowPoints(length:CGFloat,
-                             tailWidth:CGFloat,
-                             headWidth:CGFloat,
-                             headLength:CGFloat) -> [NSPoint] {
+    
+    private var arrowPoints:[NSPoint] {
         
         let tailLength = length - headLength
         var points:[NSPoint] = []
@@ -76,4 +77,5 @@ class Arrow:NSView {
         return points
         
     }
+
 }
