@@ -15,6 +15,7 @@ class Arrow:NSView {
     let headLength:CGFloat = 20.0
     let tailWidth:CGFloat = 10.0
     let headWidth:CGFloat = 30.0
+    let color:NSColor = NSColor.red
     
     var length:CGFloat {
         return CGFloat(hypotf(Float(end.x - start.x), Float(end.y - start.y)))
@@ -39,7 +40,6 @@ class Arrow:NSView {
         guard let superview = self.superview else { return }
         
         let path = NSBezierPath()
-        let color = NSColor.red
 
         color.set()
         path.lineWidth = lineWidth
