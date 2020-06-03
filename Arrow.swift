@@ -11,13 +11,16 @@ import Cocoa
 class Arrow:NSView {
     var start:NSPoint
     var end:NSPoint
-    let lineWidth: CGFloat = 2.0
-    let headLength = CGFloat(20)
-    let tailWidth = CGFloat(10)
-    let headWidth = CGFloat(30)
+    let lineWidth:CGFloat = 2.0
+    let headLength:CGFloat = 20.0
+    let tailWidth:CGFloat = 10.0
+    let headWidth:CGFloat = 30.0
     
     var length:CGFloat {
         return CGFloat(hypotf(Float(end.x - start.x), Float(end.y - start.y)))
+    }
+    var tailLength:CGFloat {
+        return self.length - self.headLength
     }
     
     init(frame:NSRect, starting:NSPoint, ending:NSPoint) {
@@ -63,8 +66,6 @@ class Arrow:NSView {
     }
     
     private var arrowPoints:[NSPoint] {
-        
-        let tailLength = length - headLength
         var points:[NSPoint] = []
         
         points.append(NSMakePoint(0, tailWidth / 2))
@@ -75,7 +76,6 @@ class Arrow:NSView {
         points.append(NSMakePoint(tailLength, -tailWidth / 2))
         points.append(NSMakePoint(0, -tailWidth / 2))
         return points
-        
     }
 
 }
